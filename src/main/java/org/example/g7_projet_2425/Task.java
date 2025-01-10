@@ -1,10 +1,10 @@
-package org.example.g7_projet_2425.models;
+package org.example.g7_projet_2425;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-class Task {
+public class Task {
     private int id;
     private String title;
     private String description;
@@ -13,8 +13,9 @@ class Task {
     private String category;
     private List<String> comments;
     private String status;
+    private Project project; // Association avec un projet
 
-    // Constructor
+    // Constructeur existant
     public Task(int id, String title, String description, String priority, LocalDate deadline, String category) {
         this.id = id;
         this.title = title;
@@ -26,8 +27,19 @@ class Task {
         this.comments = new ArrayList<>();
     }
 
-    // Methods
-    public void updateTask(String title, String description, String priority,  LocalDate deadline, String category, List<String> comments) {
+    // Nouveau constructeur surchargé pour inclure un projet
+    public Task(int id, String title, String description, String priority, Project project) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.project = project;
+        this.status = "To Do";
+        this.comments = new ArrayList<>();
+    }
+
+    // Méthodes
+    public void updateTask(String title, String description, String priority, LocalDate deadline, String category, List<String> comments) {
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -44,15 +56,15 @@ class Task {
         tasks.removeIf(task -> task.getId() == id);
     }
 
-    public void displayDetails(){
-        System.out.println("Id: " + id + ", Title: " + title + ", Description: " + description + ", Priority: " + priority + ", Deadline: " + deadline + ", Category: " + category);
+    public String displayDetails() {
+        return "Id: " + id + ", Title: " + title + ", Description: " + description + ", Priority: " + priority + ", Deadline: " + deadline + ", Category: " + category;
     }
 
     public void addComment(String comment) {
         comments.add(comment);
     }
 
-    // Getters and Setters
+    // Getters et Setters
     public int getId() {
         return id;
     }
@@ -89,6 +101,10 @@ class Task {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -97,7 +113,11 @@ class Task {
         return comments;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

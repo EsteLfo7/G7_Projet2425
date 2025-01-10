@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.TaskController">
-    <Label text="Gestion des Tâches" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-    <TableView fx:id="taskTable">
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
+    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Gestion des Tâches" />
+    <TableView fx:id="taskTable" prefHeight="182.0" prefWidth="534.0">
         <columns>
-            <TableColumn text="ID" fx:id="idColumn"/>
-            <TableColumn text="Titre" fx:id="titleColumn"/>
-            <TableColumn text="Priorité" fx:id="priorityColumn"/>
-            <TableColumn text="Deadline" fx:id="endDateColumn"/>
-            <TableColumn text="Statut" fx:id="statusColumn"/>
+            <TableColumn fx:id="idColumn" text="ID" />
+            <TableColumn fx:id="titleColumn" text="Titre" />
+            <TableColumn fx:id="priorityColumn" text="Priorité" />
+            <TableColumn fx:id="endDateColumn" text="Deadline" />
+            <TableColumn fx:id="statusColumn" text="Statut" />
         </columns>
     </TableView>
-    <HBox spacing="10">
-        <Button text="Ajouter" onAction="#addTask"/>
-        <Button text="Modifier" onAction="#editTask"/>
-        <Button text="Supprimer" onAction="#deleteTask"/>
-        <Button text="Assigner" onAction="#assignTask"/>
+    <HBox prefHeight="53.0" prefWidth="534.0" spacing="10">
+        <Button onAction="#addTask" text="Ajouter" />
+        <Button onAction="#editTask" text="Modifier" />
+        <Button onAction="#deleteTask" text="Supprimer" />
+        <Button onAction="#assignTask" text="Assigner" />
     </HBox>
-    <HBox spacing="10">
-        <Label text="Filtrer par date :"/>
-        <DatePicker fx:id="calendarPicker"/>
-        <TextArea fx:id="calendarTasks" editable="false" prefRowCount="4" prefColumnCount="20"/>
+    <HBox prefHeight="146.0" prefWidth="534.0" spacing="10">
+        <Label text="Filtrer par date :" />
+        <DatePicker fx:id="calendarPicker" />
+        <TextArea fx:id="calendarTasks" editable="false" prefColumnCount="20" prefRowCount="4" />
     </HBox>
     <HBox spacing="10">
         <VBox fx:id="toDoColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
-            <Label text="To Do" style="-fx-font-weight: bold;"/>
+            <Label style="-fx-font-weight: bold;" text="To Do" />
         </VBox>
         <VBox fx:id="inProgressColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
-            <Label text="In Progress" style="-fx-font-weight: bold;"/>
+            <Label style="-fx-font-weight: bold;" text="In Progress" />
         </VBox>
         <VBox fx:id="doneColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
-            <Label text="Done" style="-fx-font-weight: bold;"/>
+            <Label style="-fx-font-weight: bold;" text="Done" />
         </VBox>
     </HBox>
 </VBox>

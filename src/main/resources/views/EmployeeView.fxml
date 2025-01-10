@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
-
-</AnchorPane>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.g7_projet_2425.controllers.EmployeeController">
+    <Label text="Gestion des Employés"/>
+    <TableView fx:id="employeeTable">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn"/>
+            <TableColumn text="Nom" fx:id="nameColumn"/>
+            <TableColumn text="Rôle" fx:id="roleColumn"/>
+        </columns>
+    </TableView>
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#addEmployee"/>
+        <Button text="Modifier" onAction="#editEmployee"/>
+        <Button text="Supprimer" onAction="#deleteEmployee"/>
+    </HBox>
+</VBox>

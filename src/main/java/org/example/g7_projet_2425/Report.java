@@ -1,4 +1,4 @@
-package org.example.g7_projet_2425.models;
+package org.example.g7_projet_2425;
 
 class Report {
     private int id;

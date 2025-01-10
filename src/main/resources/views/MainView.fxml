@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
-
-</AnchorPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.example.g7_projet_2425.controllers.MainController">
+    <top>
+        <MenuBar>
+            <Menu text="Fichier">
+                <MenuItem onAction="#handleExit" text="Quitter" />
+            </Menu>
+            <Menu text="Vue">
+                <MenuItem onAction="#showEmployeeView" text="Gestion du Personnel" />
+                <MenuItem onAction="#showProjectView" text="Gestion des Projets" />
+                <MenuItem onAction="#showTaskView" text="Gestion des Tâches" />
+            </Menu>
+        </MenuBar>
+    </top>
+    <center>
+        <Label prefHeight="74.0" prefWidth="367.0" text="Bienvenue dans l'application de gestion collaborative !">
+            <font>
+                <Font name="Century Gothic" size="13.0" />
+            </font></Label>
+    </center>
+</BorderPane>

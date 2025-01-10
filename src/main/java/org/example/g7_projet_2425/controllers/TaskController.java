@@ -1,4 +1,4 @@
-package controllers;
+package org.example.g7_projet_2425.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

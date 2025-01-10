@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
-
-</AnchorPane>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.g7_projet_2425.controllers.ProjectController">
+    <Label text="Gestion des Projets" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <TableView fx:id="projectTable">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn"/>
+            <TableColumn text="Titre" fx:id="titleColumn"/>
+            <TableColumn text="Date de début" fx:id="startDateColumn"/>
+            <TableColumn text="Date de fin" fx:id="endDateColumn"/>
+            <TableColumn text="Deadline" fx:id="deadlineColumn"/>
+        </columns>
+    </TableView>
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#addProject"/>
+        <Button text="Modifier" onAction="#editProject"/>
+        <Button text="Supprimer" onAction="#deleteProject"/>
+    </HBox>
+    <HBox spacing="10">
+        <Button text="Afficher l'équipe" onAction="#viewTeam"/>
+        <Button text="Ajouter une tâche" onAction="#addTask"/>
+        <Button text="Voir les tâches" onAction="#viewTasks"/>
+        <Button text="Assigner" onAction="#assignTeamMembers"/>
+    </HBox>
+</VBox>

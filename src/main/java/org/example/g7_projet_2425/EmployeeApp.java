@@ -1,4 +1,4 @@
-package org.example.g7_projet_2425.models;
+package org.example.g7_projet_2425;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
