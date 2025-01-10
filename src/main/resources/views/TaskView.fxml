@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.TaskController">
+    <Label text="Gestion des Tâches" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <TableView fx:id="taskTable">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn"/>
+            <TableColumn text="Titre" fx:id="titleColumn"/>
+            <TableColumn text="Priorité" fx:id="priorityColumn"/>
+            <TableColumn text="Deadline" fx:id="endDateColumn"/>
+            <TableColumn text="Statut" fx:id="statusColumn"/>
+        </columns>
+    </TableView>
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#addTask"/>
+        <Button text="Modifier" onAction="#editTask"/>
+        <Button text="Supprimer" onAction="#deleteTask"/>
+        <Button text="Assigner" onAction="#assignTask"/>
+    </HBox>
+    <HBox spacing="10">
+        <Label text="Filtrer par date :"/>
+        <DatePicker fx:id="calendarPicker"/>
+        <TextArea fx:id="calendarTasks" editable="false" prefRowCount="4" prefColumnCount="20"/>
+    </HBox>
+    <HBox spacing="10">
+        <VBox fx:id="toDoColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
+            <Label text="To Do" style="-fx-font-weight: bold;"/>
+        </VBox>
+        <VBox fx:id="inProgressColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
+            <Label text="In Progress" style="-fx-font-weight: bold;"/>
+        </VBox>
+        <VBox fx:id="doneColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
+            <Label text="Done" style="-fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+</VBox>
