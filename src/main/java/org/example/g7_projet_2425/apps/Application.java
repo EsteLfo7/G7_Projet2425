@@ -82,7 +82,7 @@ public class Application {
         employees.add(new Employee(2, "Bob Johnson", "Developer"));
 
         // Ajouter un projet par défaut
-        Project defaultProject = new Project(1, "Migration système", null, null, null);
+        Project defaultProject = new Project(1, "Migration système", null, null);
         projects.add(defaultProject);
 
         // Ajouter quelques tâches par défaut

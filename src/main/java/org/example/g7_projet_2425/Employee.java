@@ -31,6 +31,7 @@ public class Employee {
         }
     }
 
+
     // Methods to Manage Employees
 
     public void updateRole(String newRole) {

@@ -115,10 +115,16 @@ public class EmployeeController {
                 selectedEmployee.setName(name);
                 selectedEmployee.setRole(role);
                 employeeTable.refresh();
+                // Edit de l'employé via EmployeeManager
+                EmployeeManager.getInstance().updateEmployeeRole(selectedEmployee.getId(),role);
+
+                // Mise à jour de la table
+                employeeList.setAll(EmployeeManager.getInstance().getEmployees().values());
             } catch (Exception e) {
                 showError("Erreur", "Format incorrect. Utilisez : name,role.");
             }
         });
+
     }
 
     @FXML

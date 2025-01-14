@@ -5,14 +5,21 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.example.g7_projet_2425.Employee;
-import org.example.g7_projet_2425.Project;
-import org.example.g7_projet_2425.Task;
+import javafx.scene.layout.VBox;
+import org.example.g7_projet_2425.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import javafx.scene.control.ChoiceDialog;
+
+
+
 public class ProjectController {
+
+    @FXML
+    private VBox rootVBox;
 
     @FXML
     private TableView<Project> projectTable;
@@ -30,31 +37,54 @@ public class ProjectController {
     private TableColumn<Project, LocalDate> endDateColumn;
 
     @FXML
-    private TableColumn<Project, LocalDate> deadlineColumn;
+    private TableView<Task> taskTable;
+
+    @FXML
+    private TableColumn<Task, Integer> taskIdColumn;
+
+    @FXML
+    private TableColumn<Task, String> taskTitleColumn;
+
+    @FXML
+    private TableColumn<Task, String> taskDescriptionColumn;
+
+    @FXML
+    private TableColumn<Task, LocalDate> taskEndDateColumn;
 
     private ObservableList<Employee> availableEmployees = FXCollections.observableArrayList();
 
+    private ObservableList<Project> projectList;
+
     @FXML
     public void initialize() {
-        // Lier les colonnes aux propriétés des objets Project
+        // Lier les colonnes des projets
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDate"));
         endDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        deadlineColumn.setCellValueFactory(new PropertyValueFactory<>("deadline"));
 
-        // Ajouter des données fictives pour tester (à supprimer ou adapter en production)
-        projectTable.getItems().add(new Project(1, "Projet Alpha", LocalDate.now(), LocalDate.now().plusDays(30), LocalDate.now().plusDays(15)));
+        // Lier les colonnes des tâches
+        taskIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        taskTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        taskDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        taskEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
-        // Ajouter des employés fictifs (à remplacer par les données réelles)
-        availableEmployees.addAll(
-                new Employee(1, "Alice", "Développeur"),
-                new Employee(2, "Bob", "Designer"),
-                new Employee(3, "Charlie", "Testeur")
-        );
+
+
+        projectList = FXCollections.observableArrayList(ProjectManager.getInstance().getProjects().values());
+        projectTable.setItems(projectList);
+
+        // Cacher la table des tâches au démarrage
+        taskTable.setVisible(false);
+        EmployeeManager.getInstance().addEmployeeChangeListener(updatedEmployees -> {
+            availableEmployees.setAll(updatedEmployees);
+        });
+
+        // Charger les employés au démarrage
+        availableEmployees.setAll(EmployeeManager.getInstance().getEmployees().values());
+
     }
 
-    @FXML
     public void assignTeamMembers() {
         Project selectedProject = projectTable.getSelectionModel().getSelectedItem();
         if (selectedProject == null) {
@@ -62,26 +92,62 @@ public class ProjectController {
             return;
         }
 
-        ChoiceDialog<Employee> employeeDialog = new ChoiceDialog<>(null, availableEmployees);
+        // Filtrer les employés disponibles
+        ObservableList<Employee> filteredEmployees = FXCollections.observableArrayList(
+                availableEmployees.stream()
+                        .filter(e -> !selectedProject.getTeamMembers().contains(e))
+                        .toList()
+        );
+
+        if (filteredEmployees.isEmpty()) {
+            showError("Aucun employé disponible", "Tous les employés sont déjà assignés.");
+            return;
+        }
+
+        // Création d'une liste de noms d'employés pour l'affichage
+        List<String> employeeNames = filteredEmployees.stream()
+                .map(Employee::getName)
+                .toList();
+
+        // Affichage des noms dans le ChoiceDialog
+        ChoiceDialog<String> employeeDialog = new ChoiceDialog<>(null, FXCollections.observableArrayList(employeeNames));
         employeeDialog.setTitle("Attribuer un membre de l'équipe");
         employeeDialog.setHeaderText("Sélectionnez un employé à ajouter au projet : " + selectedProject.getTitle());
         employeeDialog.setContentText("Employés disponibles :");
 
-        Optional<Employee> selectedEmployee = employeeDialog.showAndWait();
-        selectedEmployee.ifPresent(employee -> {
-            String role = promptUser("Attribuer un rôle", "Entrez le rôle pour " + employee.getName() + ":");
+        // Récupération du nom sélectionné
+        Optional<String> selectedName = employeeDialog.showAndWait();
+
+        selectedName.ifPresent(name -> {
+            // Trouver l'employé correspondant au nom sélectionné
+            Employee selectedEmployee = filteredEmployees.stream()
+                    .filter(e -> e.getName().equals(name))
+                    .findFirst()
+                    .orElse(null);
+
+            if (selectedEmployee == null) {
+                showError("Erreur", "Employé introuvable.");
+                return;
+            }
+
+            // Demander le rôle pour cet employé
+            String role = promptUser("Attribuer un rôle", "Entrez le rôle pour " + selectedEmployee.getName() + ":");
             if (role == null || role.isBlank()) {
                 showError("Erreur", "Le rôle ne peut pas être vide.");
                 return;
             }
 
-            employee.setRole(role);
-            selectedProject.addTeamMember(employee);
-            availableEmployees.remove(employee);
+            // Ajouter l'employé au projet avec le rôle
+            selectedEmployee.setRole(role);
+            selectedProject.addTeamMember(selectedEmployee);
+            availableEmployees.remove(selectedEmployee);
 
-            System.out.println("Employé ajouté : " + employee.getName() + " avec le rôle : " + role);
+            System.out.println("Employé ajouté : " + selectedEmployee.getName() + " avec le rôle : " + role);
         });
     }
+
+
+
 
     @FXML
     public void addProject() {
@@ -102,13 +168,15 @@ public class ProjectController {
             return;
         }
 
-        LocalDate deadline = showDateDialog("Entrez la deadline (AAAA-MM-JJ) :");
-        if (deadline == null) return;
-
         // Création et ajout du projet
-        Project newProject = new Project(id, title, startDate, endDate, deadline);
+        Project newProject = new Project(id, title, startDate, endDate);
         projectTable.getItems().add(newProject);
         System.out.println("Projet ajouté : " + title);
+
+        ProjectManager.getInstance().createProject(id, title, startDate, endDate);
+
+        // Mise à jour de la table
+        projectList.setAll(ProjectManager.getInstance().getProjects().values());
     }
 
     @FXML
@@ -125,13 +193,18 @@ public class ProjectController {
             selectedProject.setTitle(newTitle);
         }
 
-        LocalDate newDeadline = showDateDialog("Modifier la deadline (Actuelle : " + selectedProject.getEndDate() + ")");
-        if (newDeadline != null) {
-            selectedProject.setEndDate(newDeadline);
+        LocalDate newEndDate = showDateDialog("Modifier la date de fin (Actuelle : " + selectedProject.getEndDate() + ")");
+        if (newEndDate != null) {
+            selectedProject.setEndDate(newEndDate);
         }
 
         projectTable.refresh(); // Actualiser la table
         System.out.println("Projet modifié : " + selectedProject.getTitle());
+
+        ProjectManager.getInstance().updateProject(selectedProject.getId(), selectedProject.getTitle(), selectedProject.getStartDate(), selectedProject.getEndDate());
+
+        // Mise à jour de la table
+        projectList.setAll(ProjectManager.getInstance().getProjects().values());
     }
 
     @FXML
@@ -168,7 +241,7 @@ public class ProjectController {
             return;
         }
 
-        // Création d'une nouvelle tâche liée au projet
+        // Créer une nouvelle tâche
         int taskId = generateTaskId();
         String title = promptUser("Titre de la tâche", "Entrez le titre de la tâche :");
         if (title == null || title.isBlank()) {
@@ -182,11 +255,12 @@ public class ProjectController {
             return;
         }
 
-        LocalDate deadline = showDateDialog("Entrez la deadline de la tâche (AAAA-MM-JJ)");
-        if (deadline == null) return;
+        LocalDate endDate = showDateDialog("Entrez la date de fin de la tâche (AAAA-MM-JJ)");
+        if (endDate == null) return;
 
-        Task newTask = new Task(taskId, title, description, "Moyenne", deadline, "Générale");
+        Task newTask = new Task(taskId, title, description, "Moyenne", endDate, "Générale");
         selectedProject.addTask(newTask);
+
         System.out.println("Tâche ajoutée au projet : " + selectedProject.getTitle());
     }
 
@@ -198,10 +272,12 @@ public class ProjectController {
             return;
         }
 
-        System.out.println("Liste des tâches pour le projet : " + selectedProject.getTitle());
-        for (Task task : selectedProject.getTasks()) {
-            System.out.println(task.displayDetails());
-        }
+        // Lier les tâches au tableau des tâches
+        ObservableList<Task> tasks = FXCollections.observableArrayList(selectedProject.getTasks());
+        taskTable.setItems(tasks);
+
+        // Afficher la table des tâches
+        taskTable.setVisible(true);
     }
 
     private String promptUser(String title, String content) {
@@ -242,7 +318,8 @@ public class ProjectController {
         return (int) (Math.random() * 10000); // Génération simple d'un ID
     }
 
-    private int generateTaskId() {
+
+        private int generateTaskId() {
         return (int) (Math.random() * 10000); // Génération simple d'un ID
     }
 }

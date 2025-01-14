@@ -11,15 +11,14 @@ public class Project {
     private LocalDate endDate;
     private List<Employee> teamMembers;
     private List<Task> tasks;
-    private LocalDate deliverableDeadline;
+
 
     // Constructor
-    public Project(int id, String title, LocalDate startDate, LocalDate endDate, LocalDate deliverableDeadline) {
+    public Project(int id, String title, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.deliverableDeadline = deliverableDeadline;
         this.teamMembers = new ArrayList<>();
         this.tasks = new ArrayList<>();
     }
@@ -95,14 +94,6 @@ public class Project {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
-    }
-
-    public LocalDate getDeliverableDeadline() {
-        return deliverableDeadline;
-    }
-
-    public void setDeliverableDeadline(LocalDate deliverableDeadline) {
-        this.deliverableDeadline = deliverableDeadline;
     }
 
 
