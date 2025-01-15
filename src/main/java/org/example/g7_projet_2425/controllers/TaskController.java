@@ -42,13 +42,33 @@ public class TaskController {
 
     @FXML
     public void initialize() {
+            if (idColumn == null) {
+                idColumn = new TableColumn<>("ID");
+            }
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        if (titleColumn == null) {
+            titleColumn = new TableColumn<>("Title");
+        }
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        if (priorityColumn == null) {
+            priorityColumn = new TableColumn<>("Priority");
+        }
         priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+        if (endDateColumn == null) {
+            endDateColumn = new TableColumn<>("End Date");
+        }
         endDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        taskTable.setItems(taskList);
+        if (statusColumn == null) {
+            statusColumn = new TableColumn<>("Status");
+        }
+       statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+if (titleColumn == null) {
+    titleColumn = new TableColumn<>("Title");
+}
+        System.out.println(taskTable);
+    taskTable = new TableView<Task>();
+    taskTable.setItems(taskList);
+        System.out.println(taskTable);
 
         kanban = new Kanban();
     }
@@ -71,9 +91,10 @@ public class TaskController {
     private void switchScene(String fxmlFile, String title) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + fxmlFile));
         Parent root = loader.load();
-        Stage stage = (Stage) taskTable.getScene().getWindow();
+        Stage stage=new Stage();
         stage.setTitle(title);
         stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML

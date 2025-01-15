@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 
 <!-- task_view.fxml -->
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
     <top>
-        <Label text="Liste des Tâches" style="-fx-font-size: 18; -fx-padding: 10; -fx-alignment: center;" />
+        <Label style="-fx-font-size: 18; -fx-padding: 10; -fx-alignment: center;" text="Liste des Tâches" />
     </top>
     <center>
         <TableView fx:id="taskTable">
@@ -20,9 +20,9 @@
         </TableView>
     </center>
     <bottom>
-        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
-            <Button text="Voir le Calendrier" onAction="#openCalendarView" />
-            <Button text="Voir le Kanban" onAction="#openKanbanView" />
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+            <Button onAction="#openCalendarView" text="Voir le Calendrier" />
+            <Button onAction="#openKanbanView" text="Voir le Kanban" />
         </HBox>
     </bottom>
 </BorderPane>
