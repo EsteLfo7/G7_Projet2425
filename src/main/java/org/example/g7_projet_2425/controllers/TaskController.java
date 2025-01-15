@@ -3,6 +3,8 @@ package org.example.g7_projet_2425.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,6 +13,7 @@ import javafx.stage.Stage;
 import org.example.g7_projet_2425.Kanban;
 import org.example.g7_projet_2425.Task;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -51,6 +54,29 @@ public class TaskController {
     }
 
     @FXML
+    public void openCalendarView() throws IOException {
+        switchScene("calendar-view.fxml", "Calendrier des Tâches");
+    }
+
+    @FXML
+    public void openKanbanView() throws IOException {
+        switchScene("kanban-view.fxml", "Kanban des Tâches");
+    }
+
+    @FXML
+    public void backToTaskView() throws IOException {
+        switchScene("task-view.fxml", "Liste des Tâches");
+    }
+
+    private void switchScene(String fxmlFile, String title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/g7_projet_2425/" + fxmlFile));
+        Parent root = loader.load();
+        Stage stage = (Stage) taskTable.getScene().getWindow();
+        stage.setTitle(title);
+        stage.setScene(new Scene(root));
+    }
+
+    @FXML
     public void viewAllTasks() {
         List<Task> allTasks = kanban.getAllTasks();
 
@@ -85,7 +111,7 @@ public class TaskController {
     }
 
 
-private Task findTaskById(int id) {
+    private Task findTaskById(int id) {
         return taskList.stream().filter(task -> task.getId() == id).findFirst().orElse(null);
     }
 
@@ -140,7 +166,6 @@ private Task findTaskById(int id) {
 
             dialog.showAndWait().ifPresent(assignee -> {
                 selectedTask.setStatus(assignee);
-                refreshKanbanBoard();
                 taskTable.refresh();
             });
         } else {
@@ -155,4 +180,6 @@ private Task findTaskById(int id) {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 }

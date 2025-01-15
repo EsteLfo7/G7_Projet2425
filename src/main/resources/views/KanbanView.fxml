@@ -1,0 +1,29 @@
+<!-- kanban_view.fxml -->
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
+    <top>
+        <Label text="Vue Kanban" style="-fx-font-size: 18; -fx-padding: 10; -fx-alignment: center;" />
+    </top>
+    <center>
+        <HBox spacing="20" style="-fx-padding: 10;">
+            <VBox fx:id="toDoColumn" spacing="10" style="-fx-padding: 10; -fx-border-color: gray;">
+                <Label text="À Faire" style="-fx-font-weight: bold;" />
+            </VBox>
+            <VBox fx:id="inProgressColumn" spacing="10" style="-fx-padding: 10; -fx-border-color: gray;">
+                <Label text="En Cours" style="-fx-font-weight: bold;" />
+            </VBox>
+            <VBox fx:id="doneColumn" spacing="10" style="-fx-padding: 10; -fx-border-color: gray;">
+                <Label text="Terminé" style="-fx-font-weight: bold;" />
+            </VBox>
+        </HBox>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+            <Button text="Retour à la liste des Tâches" onAction="#backToTaskView" />
+        </HBox>
+    </bottom>
+</BorderPane>

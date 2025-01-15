@@ -3,37 +3,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
-    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Gestion des Tâches" />
-    <TableView fx:id="taskTable" prefHeight="182.0" prefWidth="534.0">
-        <columns>
-            <TableColumn fx:id="idColumn" text="ID" />
-            <TableColumn fx:id="titleColumn" text="Titre" />
-            <TableColumn fx:id="priorityColumn" text="Priorité" />
-            <TableColumn fx:id="endDateColumn" text="Deadline" />
-            <TableColumn fx:id="statusColumn" text="Statut" />
-        </columns>
-    </TableView>
-    <HBox prefHeight="53.0" prefWidth="534.0" spacing="10">
-        <Button onAction="#addTask" text="Ajouter" />
-        <Button onAction="#editTask" text="Modifier" />
-        <Button onAction="#deleteTask" text="Supprimer" />
-        <Button onAction="#assignTask" text="Assigner" />
-    </HBox>
-    <HBox prefHeight="146.0" prefWidth="534.0" spacing="10">
-        <Label text="Filtrer par date :" />
-        <DatePicker fx:id="calendarPicker" />
-        <TextArea fx:id="calendarTasks" editable="false" prefColumnCount="20" prefRowCount="4" />
-    </HBox>
-    <HBox spacing="10">
-        <VBox fx:id="toDoColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
-            <Label style="-fx-font-weight: bold;" text="To Do" />
-        </VBox>
-        <VBox fx:id="inProgressColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
-            <Label style="-fx-font-weight: bold;" text="In Progress" />
-        </VBox>
-        <VBox fx:id="doneColumn" style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;">
-            <Label style="-fx-font-weight: bold;" text="Done" />
-        </VBox>
-    </HBox>
-</VBox>
+<!-- task_view.fxml -->
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
+    <top>
+        <Label text="Liste des Tâches" style="-fx-font-size: 18; -fx-padding: 10; -fx-alignment: center;" />
+    </top>
+    <center>
+        <TableView fx:id="taskTable">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" />
+                <TableColumn fx:id="titleColumn" text="Titre" />
+                <TableColumn fx:id="priorityColumn" text="Priorité" />
+                <TableColumn fx:id="endDateColumn" text="Date de fin" />
+                <TableColumn fx:id="statusColumn" text="Statut" />
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+            <Button text="Voir le Calendrier" onAction="#openCalendarView" />
+            <Button text="Voir le Kanban" onAction="#openKanbanView" />
+        </HBox>
+    </bottom>
+</BorderPane>

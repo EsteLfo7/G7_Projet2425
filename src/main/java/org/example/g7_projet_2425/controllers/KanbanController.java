@@ -1,15 +1,20 @@
 package org.example.g7_projet_2425.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
-import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import org.example.g7_projet_2425.Kanban;
 import org.example.g7_projet_2425.Task;
+
+import java.io.IOException;
 
 public class KanbanController {
 
@@ -57,15 +62,12 @@ public class KanbanController {
                     switch (targetColumn) {
                         case "To Do":
                             kanban.moveTaskToDo(task);
-                            task.setStatus("To Do");
                             break;
                         case "In Progress":
                             kanban.moveTaskInProgress(task);
-                            task.setStatus("In Progress");
                             break;
                         case "Done":
                             kanban.moveTaskDone(task);
-                            task.setStatus("Done");
                             break;
                     }
                     refreshKanbanBoard();
@@ -95,18 +97,29 @@ public class KanbanController {
         kanban.getDone().forEach(task -> doneColumn.getChildren().add(createDraggableTaskLabel(task)));
     }
 
-    private HBox createDraggableTaskLabel(Task task) {
-        Label taskTitle = new Label(task.getTitle());
-        taskTitle.setOnDragDetected(event -> {
-            Dragboard db = taskTitle.startDragAndDrop(TransferMode.MOVE);
+    private VBox createDraggableTaskLabel(Task task) {
+        VBox taskBox = new VBox();
+        taskBox.getChildren().add(new Label(task.getTitle()));
+        taskBox.setOnDragDetected(event -> {
+            Dragboard db = taskBox.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putString(String.valueOf(task.getId()));
             db.setContent(content);
             event.consume();
         });
-
-        HBox taskBox = new HBox(10, taskTitle);
-        taskBox.setStyle("-fx-padding: 5; -fx-border-color: gray; -fx-background-color: lightgray;");
         return taskBox;
+    }
+
+    @FXML
+    public void backToTaskView() throws IOException {
+        switchScene("task-view.fxml", "Liste des Tâches");
+    }
+
+    private void switchScene(String fxmlFile, String title) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/g7_projet_2425/" + fxmlFile));
+        Parent root = loader.load();
+        Stage stage = (Stage) toDoColumn.getScene().getWindow();
+        stage.setTitle(title);
+        stage.setScene(new Scene(root));
     }
 }
