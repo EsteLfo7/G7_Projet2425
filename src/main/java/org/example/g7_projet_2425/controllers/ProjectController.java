@@ -51,12 +51,25 @@ public class ProjectController {
     @FXML
     private TableColumn<Task, LocalDate> taskEndDateColumn;
 
+    @FXML
+    private TableView<Employee> teamTable;
+
+    @FXML
+    private TableColumn<Employee, Integer> memberIdColumn;
+
+    @FXML
+    private TableColumn<Employee, String> memberNameColumn;
+
+    @FXML
+    private TableColumn<Employee, String> memberRoleColumn;
+
     private ObservableList<Employee> availableEmployees = FXCollections.observableArrayList();
 
     private ObservableList<Project> projectList;
 
     @FXML
     public void initialize() {
+
         // Lier les colonnes des projets
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -69,6 +82,11 @@ public class ProjectController {
         taskDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         taskEndDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
+        // Lier les colonnes des l'équipe
+        memberIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        memberNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        memberRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+
 
 
         projectList = FXCollections.observableArrayList(ProjectManager.getInstance().getProjects().values());
@@ -80,10 +98,17 @@ public class ProjectController {
             availableEmployees.setAll(updatedEmployees);
         });
 
+        // Cacher la table des tâches au démarrage
+        teamTable.setVisible(false);
+        EmployeeManager.getInstance().addEmployeeChangeListener(updatedEmployees -> {
+            availableEmployees.setAll(updatedEmployees);
+        });
+
         // Charger les employés au démarrage
         availableEmployees.setAll(EmployeeManager.getInstance().getEmployees().values());
 
     }
+
 
     public void assignTeamMembers() {
         Project selectedProject = projectTable.getSelectionModel().getSelectedItem();
@@ -141,7 +166,7 @@ public class ProjectController {
             selectedEmployee.setRole(role);
             selectedProject.addTeamMember(selectedEmployee);
             availableEmployees.remove(selectedEmployee);
-
+            ProjectManager.getInstance().addEmployeeToProject(selectedProject.getId(),selectedEmployee,role);
             System.out.println("Employé ajouté : " + selectedEmployee.getName() + " avec le rôle : " + role);
         });
     }
@@ -227,10 +252,16 @@ public class ProjectController {
             return;
         }
 
+        // Lier l'équipe au tableau de l'équipe
+        ObservableList<Employee> employees = FXCollections.observableArrayList(selectedProject.getTeamMembers());
+        teamTable.setItems(employees);
+
         System.out.println("Équipe du projet : " + selectedProject.getTitle());
         for (Employee member : selectedProject.getTeamMembers()) {
             System.out.println(member.getName() + " - " + member.getRole());
         }
+        taskTable.setVisible(false);
+        teamTable.setVisible(true);
     }
 
     @FXML
@@ -261,6 +292,8 @@ public class ProjectController {
         Task newTask = new Task(taskId, title, description, "Moyenne", endDate, "Générale");
         selectedProject.addTask(newTask);
 
+        ProjectManager.getInstance().addTaskToProject(selectedProject.getId(), newTask);
+
         System.out.println("Tâche ajoutée au projet : " + selectedProject.getTitle());
     }
 
@@ -277,6 +310,7 @@ public class ProjectController {
         taskTable.setItems(tasks);
 
         // Afficher la table des tâches
+        teamTable.setVisible(false);
         taskTable.setVisible(true);
     }
 

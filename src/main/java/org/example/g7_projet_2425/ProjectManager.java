@@ -2,6 +2,8 @@ package org.example.g7_projet_2425;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -10,23 +12,32 @@ import java.util.Map;
 public class ProjectManager {
     private static ProjectManager instance; // Instance unique
 
-    private final String csvFilePath; // Chemin relatif vers le fichier CSV
+    private String csvFilePath; // Chemin relatif vers le fichier CSV
     private Map<Integer, Project> projects;
+    private String tasksCsvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/tasks.csv";
+    private String teamMembersCsvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/team_members.csv";
+
 
     // Constructeur
     private ProjectManager() {
         projects = new HashMap<>();
 
         // Définir le chemin relatif vers le fichier dans le dossier resources
-        URL resource = getClass().getResource("/data/projects.csv");
-        if (resource != null) {
-            csvFilePath = Paths.get(resource.getPath()).toString();
-        } else {
-            System.err.println("Erreur : le fichier projects.csv est introuvable dans le dossier resources.");
-            csvFilePath = "projects.csv"; // Par défaut, créer dans le répertoire courant
-        }
+        csvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/projects.csv"; // Remplacez par votre chemin exact
 
-        loadProjectsFromCSV(); // Charger les projets depuis le fichier CSV au démarrage
+        Path absolutePath = Paths.get(csvFilePath);
+
+        if (Files.exists(absolutePath)) {
+            System.out.println("Fichier trouvé : " + absolutePath);
+        } else {
+            System.err.println("Erreur : le fichier projects.csv est introuvable au chemin absolu : " + absolutePath);
+            // Optionnel : Par défaut, utiliser un fichier dans le répertoire courant
+            csvFilePath = "employees.csv";
+        }
+        // Charger les données depuis les fichiers CSV au démarrage
+        loadProjectsFromCSV();
+        loadTasksFromCSV();
+        loadTeamMembersFromCSV();
     }
 
     public static ProjectManager getInstance() {
@@ -98,7 +109,7 @@ public class ProjectManager {
         Project project = projects.get(projectId);
         if (project != null) {
             project.addTask(task);
-            saveProjectsToCSV(); // Sauvegarde automatique
+            saveTasksToCSV(); // Sauvegarde automatique
             System.out.println("Tâche ajoutée avec succès au projet : " + project.getTitle());
         } else {
             System.out.println("Projet introuvable !");
@@ -106,11 +117,11 @@ public class ProjectManager {
     }
 
     // Ajouter un employé à un projet
-    public void addEmployeeToProject(int projectId, Employee employee) {
+    public void addEmployeeToProject(int projectId, Employee employee, String role) {
         Project project = projects.get(projectId);
         if (project != null) {
             project.addTeamMember(employee);
-            saveProjectsToCSV(); // Sauvegarde automatique
+            saveTeamMembersToCSV(role); // Sauvegarde automatique
             System.out.println("Employé ajouté à l'équipe du projet : " + project.getTitle());
         } else {
             System.out.println("Projet introuvable !");
@@ -131,6 +142,42 @@ public class ProjectManager {
             System.out.println("Le fichier projects.csv a été modifié avec succès.");
         } catch (IOException e) {
             System.err.println("Erreur lors de la sauvegarde des projets : " + e.getMessage());
+        }
+    }
+
+    // Sauvegarder les tâches dans un fichier CSV
+    private void saveTasksToCSV() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tasksCsvFilePath))) {
+            writer.write("ProjectID,TaskTitle,Priority");
+            writer.newLine();
+            for (Project project : projects.values()) {
+                for (Task task : project.getTasks()) {
+                    String line = project.getId() + "," + task.getTitle() + "," + task.getPriority();
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+            System.out.println("Le fichier tasks.csv a été modifié avec succès.");
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde des tâches : " + e.getMessage());
+        }
+    }
+
+    // Sauvegarder les membres d'équipe dans un fichier CSV
+    private void saveTeamMembersToCSV(String role) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(teamMembersCsvFilePath))) {
+            writer.write("ProjectID,EmployeeID,Nom");
+            writer.newLine();
+            for (Project project : projects.values()) {
+                for (Employee member : project.getTeamMembers()) {
+                    String line = project.getId() + "," + member.getId() + "," + role;
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+            System.out.println("Le fichier team_members.csv a été modifié avec succès.");
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde des membres d'équipe : " + e.getMessage());
         }
     }
 
@@ -158,11 +205,84 @@ public class ProjectManager {
                 LocalDate endDate = LocalDate.parse(fields[3].trim());
                 projects.put(id, new Project(id, title, startDate, endDate));
             }
-            System.out.println("Les projets ont été chargés depuis " + csvFilePath);
+            System.out.println("Les projets ont été chargés depuis le fichier projects.csv" );
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement des projets : " + e.getMessage());
         }
     }
+
+    // Charger les tâches depuis un fichier CSV
+    private void loadTasksFromCSV() {
+        File file = new File(tasksCsvFilePath);
+        if (!file.exists()) {
+            System.out.println("Fichier tasks.csv non trouvé. Création d'une base vide.");
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(tasksCsvFilePath))) {
+            String line;
+            boolean isHeader = true;
+
+            while ((line = reader.readLine()) != null) {
+                if (isHeader) {
+                    isHeader = false;
+                    continue;
+                }
+                String[] fields = line.split(",");
+                int taskId = Integer.parseInt(fields[0].trim());
+                int projectId = Integer.parseInt(fields[1].trim());
+                String title = fields[2].trim();
+                String description = fields[3].trim();
+                String priority = fields[4].trim();
+
+                Project project = projects.get(projectId);
+                if (project != null) {
+                    Task task = new Task(taskId, title, description, priority, project);
+                    project.addTask(task);
+                }
+            }
+            System.out.println("Les tâches ont été chargées depuis le fichier tasks.csv");
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement des tâches : " + e.getMessage());
+        }
+    }
+
+    // Charger les membres d'équipe depuis un fichier CSV
+    private void loadTeamMembersFromCSV() {
+        File file = new File(teamMembersCsvFilePath);
+        if (!file.exists()) {
+            System.out.println("Fichier team_members.csv non trouvé. Création d'une base vide.");
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(teamMembersCsvFilePath))) {
+            String line;
+            boolean isHeader = true;
+
+            while ((line = reader.readLine()) != null) {
+                if (isHeader) {
+                    isHeader = false;
+                    continue;
+                }
+                String[] fields = line.split(",");
+                int employeeId = Integer.parseInt(fields[0].trim());
+                int projectId = Integer.parseInt(fields[1].trim());
+                String name = fields[2].trim();
+                String role = fields[3].trim();
+
+                Project project = projects.get(projectId);
+                if (project != null) {
+                    Employee employee = new Employee(employeeId, name, role);
+                    project.addTeamMember(employee);
+                }
+            }
+            System.out.println("Les membres d'équipe ont été chargés depuis le fichier team_members.csv");
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement des membres d'équipe : " + e.getMessage());
+        }
+    }
+
+
 
     // Retourner la liste des projets
     public Map<Integer, Project> getProjects() {

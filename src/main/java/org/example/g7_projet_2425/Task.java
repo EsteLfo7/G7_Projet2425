@@ -16,7 +16,7 @@ public class Task {
     private Project project; // Association avec un projet
 
     // Constructeur existant
-    public Task(int id, String title, String description, String priority, LocalDate deadline, String category) {
+    public Task(int id, String title, String description, String priority,LocalDate deadline, String category) {
         this.id = id;
         this.title = title;
         this.description = description;

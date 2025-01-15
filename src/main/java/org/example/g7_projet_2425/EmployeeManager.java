@@ -2,6 +2,8 @@ package org.example.g7_projet_2425;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,23 +14,28 @@ import java.util.function.Consumer;
 public class EmployeeManager {
     private static EmployeeManager instance; // Instance unique
 
-    private final String csvFilePath; // Chemin relatif vers le fichier CSV
+    private String csvFilePath; // Chemin relatif vers le fichier CSV
     public Map<Integer, Employee> employees;
     private final List<Consumer<List<Employee>>> employeeChangeListeners = new ArrayList<>();
 
     protected EmployeeManager() {
         employees = new HashMap<>();
 
-        // Définir le chemin relatif vers le fichier dans le dossier resources
-        URL resource = getClass().getResource("/data/employees.csv");
-        if (resource != null) {
-            csvFilePath = Paths.get(resource.getPath()).toString();
+        // Utiliser un chemin absolu pour le fichier CSV
+        csvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/employees.csv"; // Remplacez par votre chemin exact
+
+        Path absolutePath = Paths.get(csvFilePath);
+
+        if (Files.exists(absolutePath)) {
+            System.out.println("Fichier trouvé : " + absolutePath);
         } else {
-            System.err.println("Erreur : le fichier employees.csv est introuvable dans le dossier resources.");
-            csvFilePath = "employees.csv"; // Par défaut, créer dans le répertoire courant
+            System.err.println("Erreur : le fichier employees.csv est introuvable au chemin absolu : " + absolutePath);
+            // Optionnel : Par défaut, utiliser un fichier dans le répertoire courant
+            csvFilePath = "employees.csv";
         }
 
         loadEmployeesFromCSV(); // Charger les employés depuis le fichier CSV au démarrage
+
     }
 
     public static EmployeeManager getInstance() {
@@ -80,7 +87,7 @@ public class EmployeeManager {
                 writer.write(line);
                 writer.newLine();
             }
-            System.out.println("Le fichier employee.csv a été modifié avec succès.");
+            System.out.println("Le fichier employees.csv a été modifié avec succès.");
         } catch (IOException e) {
             System.err.println("Erreur lors de la sauvegarde des employés : " + e.getMessage());
         }
@@ -108,7 +115,7 @@ public class EmployeeManager {
                 String role = fields[2].trim();
                 employees.put(id, new Employee(id, name, role));
             }
-            System.out.println("Les employés ont été chargés depuis " + csvFilePath);
+            System.out.println("Les employés ont été chargés depuis le fichier employees.csv");
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement des employés : " + e.getMessage());
         }

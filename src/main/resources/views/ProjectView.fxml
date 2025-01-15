@@ -19,10 +19,10 @@
         <Button onAction="#deleteProject" text="Supprimer" />
     </HBox>
     <HBox spacing="10">
+        <Button onAction="#assignTeamMembers" text="Assigner" />
         <Button onAction="#viewTeam" text="Afficher l'équipe" />
         <Button onAction="#addTask" text="Ajouter une tâche" />
         <Button onAction="#viewTasks" text="Voir les tâches" />
-        <Button onAction="#assignTeamMembers" text="Assigner" />
     </HBox>
     <TableView fx:id="taskTable" visible="false">
         <columns>
@@ -31,5 +31,12 @@
             <TableColumn fx:id="taskDescriptionColumn" text="Description" />
             <TableColumn fx:id="taskEndDateColumn" text="Date de fin" />
         </columns>
+    </TableView>
+    <TableView fx:id="teamTable" visible="false">
+    <columns>
+        <TableColumn fx:id="memberIdColumn" text="ID" />
+        <TableColumn fx:id="memberNameColumn" text="Name" />
+        <TableColumn fx:id="memberRoleColumn" text="Role" />
+    </columns>
     </TableView>
 </VBox>
