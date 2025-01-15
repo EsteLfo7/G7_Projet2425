@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Kanban {
-    // Initialization
     private List<Task> toDo;
     private List<Task> inProgress;
     private List<Task> done;
 
-    // Constructor
     public Kanban() {
         this.toDo = new ArrayList<>();
         this.inProgress = new ArrayList<>();
         this.done = new ArrayList<>();
     }
 
-    // Methods
     public void moveTaskToDo(Task task) {
         inProgress.remove(task);
         done.remove(task);
@@ -59,11 +56,7 @@ public class Kanban {
 
     public void viewCalendar() {
         System.out.println("Calendar View:");
-        // Simulate a calendar view by listing tasks with deadlines
-        List<Task> allTasks = new ArrayList<>();
-        allTasks.addAll(toDo);
-        allTasks.addAll(inProgress);
-        allTasks.addAll(done);
+        List<Task> allTasks = getAllTasks();
         allTasks.sort((t1, t2) -> t1.getDeadline().compareTo(t2.getDeadline()));
 
         for (Task task : allTasks) {
@@ -71,7 +64,14 @@ public class Kanban {
         }
     }
 
-    // Getters
+    public List<Task> getAllTasks() {
+        List<Task> allTasks = new ArrayList<>();
+        allTasks.addAll(toDo);
+        allTasks.addAll(inProgress);
+        allTasks.addAll(done);
+        return allTasks;
+    }
+
     public List<Task> getToDo() {
         return toDo;
     }

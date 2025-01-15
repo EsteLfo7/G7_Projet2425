@@ -3,18 +3,16 @@ package org.example.g7_projet_2425.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.example.g7_projet_2425.Kanban;
 import org.example.g7_projet_2425.Task;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class TaskController {
 
@@ -36,21 +34,6 @@ public class TaskController {
     @FXML
     private TableColumn<Task, String> statusColumn;
 
-    @FXML
-    private VBox toDoColumn;
-
-    @FXML
-    private VBox inProgressColumn;
-
-    @FXML
-    private VBox doneColumn;
-
-    @FXML
-    private DatePicker calendarPicker;
-
-    @FXML
-    private TextArea calendarTasks;
-
     private ObservableList<Task> taskList = FXCollections.observableArrayList();
     private Kanban kanban;
 
@@ -65,98 +48,26 @@ public class TaskController {
         taskTable.setItems(taskList);
 
         kanban = new Kanban();
-        setupDragAndDrop();
-
-        calendarPicker.setOnAction(event -> displayTasksForSelectedDate());
     }
 
-    private void setupDragAndDrop() {
-        setupColumnDrag(toDoColumn, "To Do");
-        setupColumnDrag(inProgressColumn, "In Progress");
-        setupColumnDrag(doneColumn, "Done");
-    }
+    @FXML
+    public void viewAllTasks() {
+        List<Task> allTasks = kanban.getAllTasks();
 
-    private void setupColumnDrag(VBox column, String status) {
-        column.setOnDragOver(event -> {
-            event.acceptTransferModes(TransferMode.MOVE);
-            event.consume();
-        });
+        // Fenêtre dédiée
+        Stage taskWindow = new Stage();
+        VBox taskLayout = new VBox(10);
+        taskLayout.setStyle("-fx-padding: 10;");
 
-        column.setOnDragDropped(event -> handleDragDropped(event, status));
-    }
-
-    private void handleDragDropped(DragEvent event, String targetColumn) {
-        Dragboard db = event.getDragboard();
-        if (db.hasString()) {
-            try {
-                int taskId = Integer.parseInt(db.getString());
-                Task task = findTaskById(taskId);
-
-                if (task != null) {
-                    switch (targetColumn) {
-                        case "To Do":
-                            kanban.moveTaskToDo(task);
-                            task.setStatus("To Do");
-                            break;
-                        case "In Progress":
-                            kanban.moveTaskInProgress(task);
-                            task.setStatus("In Progress");
-                            break;
-                        case "Done":
-                            kanban.moveTaskDone(task);
-                            task.setStatus("Done");
-                            break;
-                    }
-                    refreshKanbanBoard();
-                }
-            } catch (NumberFormatException e) {
-                System.err.println("Erreur : ID de tâche invalide");
-            }
+        for (Task task : allTasks) {
+            Label taskLabel = new Label(task.toString());
+            taskLayout.getChildren().add(taskLabel);
         }
-        event.setDropCompleted(true);
-        event.consume();
-    }
 
-    private Task findTaskById(int id) {
-        return taskList.stream().filter(task -> task.getId() == id).findFirst().orElse(null);
-    }
-
-    private void refreshKanbanBoard() {
-        toDoColumn.getChildren().clear();
-        inProgressColumn.getChildren().clear();
-        doneColumn.getChildren().clear();
-
-        kanban.getToDo().forEach(task -> toDoColumn.getChildren().add(createDraggableTaskLabel(task)));
-        kanban.getInProgress().forEach(task -> inProgressColumn.getChildren().add(createDraggableTaskLabel(task)));
-        kanban.getDone().forEach(task -> doneColumn.getChildren().add(createDraggableTaskLabel(task)));
-    }
-
-    private HBox createDraggableTaskLabel(Task task) {
-        Label taskTitle = new Label(task.getTitle());
-        taskTitle.setOnDragDetected(event -> {
-            Dragboard db = taskTitle.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putString(String.valueOf(task.getId()));
-            db.setContent(content);
-            event.consume();
-        });
-
-        HBox taskBox = new HBox(10, taskTitle);
-        taskBox.setStyle("-fx-padding: 5; -fx-border-color: gray; -fx-background-color: lightgray;");
-        return taskBox;
-    }
-
-    private void displayTasksForSelectedDate() {
-        LocalDate selectedDate = calendarPicker.getValue();
-        if (selectedDate != null) {
-            StringBuilder tasksForDate = new StringBuilder();
-            for (Task task : taskList) {
-                if (task.getDeadline().equals(selectedDate)) {
-                    tasksForDate.append(task.getTitle()).append("\n");
-                }
-            }
-            calendarTasks.setText(tasksForDate.toString());
-        }
+        Scene scene = new Scene(taskLayout, 400, 400);
+        taskWindow.setTitle("Toutes les Tâches");
+        taskWindow.setScene(scene);
+        taskWindow.show();
     }
 
     @FXML
@@ -171,8 +82,16 @@ public class TaskController {
         );
         kanban.moveTaskToDo(newTask);
         taskList.add(newTask);
-        refreshKanbanBoard();
     }
+
+
+private Task findTaskById(int id) {
+        return taskList.stream().filter(task -> task.getId() == id).findFirst().orElse(null);
+    }
+
+
+
+
 
     @FXML
     public void editTask() {
@@ -185,7 +104,8 @@ public class TaskController {
 
             dialog.showAndWait().ifPresent(newTitle -> {
                 selectedTask.setTitle(newTitle);
-                refreshKanbanBoard();
+                kanban.moveTaskDone(selectedTask);
+                taskList.remove(selectedTask);
                 taskTable.refresh();
             });
         } else {
@@ -202,7 +122,7 @@ public class TaskController {
             kanban.getToDo().remove(selectedTask);
             kanban.getInProgress().remove(selectedTask);
             kanban.getDone().remove(selectedTask);
-            refreshKanbanBoard();
+
         } else {
             showAlert("Erreur", "Veuillez sélectionner une tâche à supprimer.");
         }
