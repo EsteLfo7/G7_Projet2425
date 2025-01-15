@@ -55,21 +55,21 @@ public class TaskController {
 
     @FXML
     public void openCalendarView() throws IOException {
-        switchScene("calendar-view.fxml", "Calendrier des Tâches");
+        switchScene("CalendarView.fxml", "Calendrier des Tâches");
     }
 
     @FXML
     public void openKanbanView() throws IOException {
-        switchScene("kanban-view.fxml", "Kanban des Tâches");
+        switchScene("KanbanView.fxml", "Kanban des Tâches");
     }
 
     @FXML
     public void backToTaskView() throws IOException {
-        switchScene("task-view.fxml", "Liste des Tâches");
+        switchScene("TaskView.fxml", "Liste des Tâches");
     }
 
     private void switchScene(String fxmlFile, String title) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/g7_projet_2425/" + fxmlFile));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + fxmlFile));
         Parent root = loader.load();
         Stage stage = (Stage) taskTable.getScene().getWindow();
         stage.setTitle(title);
