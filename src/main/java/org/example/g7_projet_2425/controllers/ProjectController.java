@@ -164,7 +164,7 @@ public class ProjectController {
 
             // Ajouter l'employé au projet avec le rôle
             selectedEmployee.setRole(role);
-            selectedProject.addTeamMember(selectedEmployee);
+ //           selectedProject.addTeamMember(selectedEmployee);
             availableEmployees.remove(selectedEmployee);
             ProjectManager.getInstance().addEmployeeToProject(selectedProject.getId(),selectedEmployee,role);
             System.out.println("Employé ajouté : " + selectedEmployee.getName() + " avec le rôle : " + role);
@@ -290,7 +290,7 @@ public class ProjectController {
         if (endDate == null) return;
 
         Task newTask = new Task(taskId, title, description, "Moyenne", endDate, "Générale");
-        selectedProject.addTask(newTask);
+ //       selectedProject.addTask(newTask);
 
         ProjectManager.getInstance().addTaskToProject(selectedProject.getId(), newTask);
 

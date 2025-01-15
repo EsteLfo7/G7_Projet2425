@@ -2,25 +2,25 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.example.g7_projet_2425.controllers.MainController">
-    <top>
-        <MenuBar>
-            <Menu text="Fichier">
-                <MenuItem onAction="#handleExit" text="Quitter" />
-            </Menu>
-            <Menu text="Vue">
-                <MenuItem onAction="#showEmployeeView" text="Gestion du Personnel" />
-                <MenuItem onAction="#showProjectView" text="Gestion des Projets" />
-                <MenuItem onAction="#showTaskView" text="Gestion des Tâches" />
-            </Menu>
-        </MenuBar>
-    </top>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.example.g7_projet_2425.controllers.MainController" prefWidth="600" prefHeight="400">
     <center>
-        <Label prefHeight="74.0" prefWidth="367.0" text="Bienvenue dans l'application de gestion collaborative !">
-            <font>
-                <Font name="Century Gothic" size="13.0" />
-            </font></Label>
+        <VBox alignment="CENTER" spacing="20.0">
+            <!-- Texte de bienvenue -->
+            <Label text="Bienvenue dans l'application de gestion collaborative !" textAlignment="CENTER">
+                <font>
+                    <Font name="Century Gothic Bold" size="20.0" />
+                </font>
+            </Label>
+            <!-- Boutons centrés -->
+            <VBox alignment="CENTER" spacing="10.0">
+                <Button text="Gestion du Personnel" onAction="#showEmployeeView" prefWidth="200" />
+                <Button text="Gestion des Projets" onAction="#showProjectView" prefWidth="200" />
+                <Button text="Gestion des Tâches" onAction="#showTaskView" prefWidth="200" />
+                <Button text="Quitter" onAction="#handleExit" prefWidth="200" />
+            </VBox>
+        </VBox>
     </center>
 </BorderPane>

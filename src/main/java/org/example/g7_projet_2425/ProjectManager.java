@@ -166,11 +166,11 @@ public class ProjectManager {
     // Sauvegarder les membres d'équipe dans un fichier CSV
     private void saveTeamMembersToCSV(String role) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(teamMembersCsvFilePath))) {
-            writer.write("ProjectID,EmployeeID,Nom");
+            writer.write("ProjectID,employeeId, name, role");
             writer.newLine();
             for (Project project : projects.values()) {
                 for (Employee member : project.getTeamMembers()) {
-                    String line = project.getId() + "," + member.getId() + "," + role;
+                    String line = project.getId() + "," + member.getId() + "," + member.getName() + "," + role;
                     writer.write(line);
                     writer.newLine();
                 }
