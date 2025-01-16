@@ -3,47 +3,72 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.g7_projet_2425.controllers.EmployeeController" prefHeight="400.0" prefWidth="600.0"
-      style="-fx-background-color: #EBDEF0; -fx-padding: 20px; -fx-alignment: center;">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.g7_projet_2425.controllers.ProjectController" prefHeight="400.0" prefWidth="600.0"
+      style="-fx-background-color: #EBDEF0; -fx-padding: 20px; -fx-alignment: center; -fx-spacing: 15;">
 
     <!-- Titre -->
-    <Label text="Gestion des Employés"
+    <Label text="Gestion des Projets"
            style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #AF74C5; -fx-padding: 10px;"/>
 
-    <!-- TableView -->
-    <TableView fx:id="employeeTable"
+    <!-- TableView des projets -->
+    <TableView fx:id="projectTable"
                style="-fx-background-color: white; -fx-border-radius: 10; -fx-background-radius: 10;
-                 -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
-                 -fx-padding: 10px; -fx-font-size: 14px;">
+                      -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+                      -fx-padding: 10px; -fx-font-size: 14px;">
         <columns>
-            <TableColumn text="ID" fx:id="idColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;"/>
-            <TableColumn text="Nom" fx:id="nameColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;"/>
-            <TableColumn text="Rôle" fx:id="roleColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;"/>
+            <TableColumn text="ID" fx:id="idColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Titre" fx:id="titleColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Date de début" fx:id="startDateColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Date de fin" fx:id="endDateColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
         </columns>
-
-
-        <style>
-            .table-row-cell:filled {
-            -fx-background-color: transparent;
-            -fx-border-color: #AF74C5;
-            }
-            .table-row-cell:hover {
-            -fx-background-color: #f3f3f3;
-            -fx-border-color: #AF74C5;
-            }
-        </style>
     </TableView>
 
-
-    <!-- HBox pour les boutons -->
+    <!-- HBox pour les boutons principaux -->
     <HBox spacing="10" style="-fx-alignment: center; -fx-padding: 10px;">
-        <Button text="Ajouter" onAction="#addEmployee"
+        <Button text="Ajouter" onAction="#addProject"
                 style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
-        <Button text="Modifier" onAction="#editEmployee"
+        <Button text="Modifier" onAction="#editProject"
                 style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
-        <Button text="Supprimer" onAction="#deleteEmployee"
+        <Button text="Supprimer" onAction="#deleteProject"
+                style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+    </HBox>
+
+    <!-- HBox pour les actions supplémentaires -->
+    <HBox spacing="10" style="-fx-alignment: center; -fx-padding: 10px;">
+        <Button text="Assigner" onAction="#assignTeamMembers"
+                style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+        <Button text="Afficher l'équipe" onAction="#viewTeam"
+                style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+        <Button text="Ajouter une tâche" onAction="#addTask"
+                style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+        <Button text="Voir les tâches" onAction="#viewTasks"
                 style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
         <Button text="Retour à l'accueil" onAction="#viewMain"
                 style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
     </HBox>
+
+    <!-- TableView des tâches -->
+    <TableView fx:id="taskTable" visible="false"
+               style="-fx-background-color: white; -fx-border-radius: 10; -fx-background-radius: 10;
+                      -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+                      -fx-padding: 10px; -fx-font-size: 14px;">
+        <columns>
+            <TableColumn text="ID" fx:id="taskIdColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Titre" fx:id="taskTitleColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Description" fx:id="taskDescriptionColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Date de fin" fx:id="taskEndDateColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+        </columns>
+    </TableView>
+
+    <!-- TableView de l'équipe -->
+    <TableView fx:id="teamTable" visible="false"
+               style="-fx-background-color: white; -fx-border-radius: 10; -fx-background-radius: 10;
+                      -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+                      -fx-padding: 10px; -fx-font-size: 14px;">
+        <columns>
+            <TableColumn text="ID" fx:id="memberIdColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Nom" fx:id="memberNameColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+            <TableColumn text="Rôle" fx:id="memberRoleColumn" style="-fx-text-fill: #AF74C5; -fx-font-weight: bold;" />
+        </columns>
+    </TableView>
 </VBox>
