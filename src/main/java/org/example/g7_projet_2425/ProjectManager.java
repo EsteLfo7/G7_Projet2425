@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class ProjectManager {
     private static ProjectManager instance; // Instance unique
 
@@ -127,8 +128,9 @@ public class ProjectManager {
         }
     }
 
-    // Sauvegarder les projets dans un fichier CSV
+    // Sauvegarder les projes dans un fichier CSV
     private void saveProjectsToCSV() {
+        csvFilePath="projet.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
             writer.write("ID,Title,StartDate,EndDate");
             writer.newLine();
@@ -146,6 +148,7 @@ public class ProjectManager {
 
     // Sauvegarder les tâches dans un fichier CSV
     private void saveTasksToCSV() {
+        tasksCsvFilePath="tasks.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tasksCsvFilePath))) {
             writer.write("ProjectID,TaskID,Title,Description,Priority,Deadline,Category");
             writer.newLine();
@@ -164,6 +167,7 @@ public class ProjectManager {
 
     // Sauvegarder les membres d'équipe dans un fichier CSV
     private void saveTeamMembersToCSV(String role) {
+        teamMembersCsvFilePath="team_members.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(teamMembersCsvFilePath))) {
             writer.write("ProjectID,employeeId, name, role");
             writer.newLine();
@@ -214,6 +218,7 @@ public class ProjectManager {
 
     // Charger les tâches depuis un fichier CSV
     private void loadTasksFromCSV() {
+        tasksCsvFilePath="tasks.csv";
         try (BufferedReader reader = new BufferedReader(new FileReader(tasksCsvFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -245,12 +250,14 @@ public class ProjectManager {
 
 
 
-    // Charger les membres d'équipe depuis un fichier CSV
+
 
     private void loadTeamMembersFromCSV() {
+        teamMembersCsvFilePath="team_members.csv";
+        System.out.println("aze"+teamMembersCsvFilePath);
         File file = new File(teamMembersCsvFilePath);
         if (!file.exists()) {
-            System.out.println("Fichier team_members.csv non trouvé. Création d'une base vide.");
+            System.out.println("Fichier team_members.csv non trouvé. Création d'une base vide."+file);
             return;
         }
 
@@ -273,10 +280,11 @@ public class ProjectManager {
                 int employeeId = Integer.parseInt(fields[1].trim());
                 String name = fields[2].trim();
                 String role = fields[3].trim();
+                String password = fields[4].trim();
 
                 Project project = projects.get(projectId);
                 if (project != null) {
-                    Employee employee = new Employee(employeeId, name, role);
+                    Employee employee = new Employee(employeeId, name, role,password);
                     project.addTeamMember(employee);
                 } else {
                     System.err.println("Projet ID non trouvé pour l'employé : " + name);

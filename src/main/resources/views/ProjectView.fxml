@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="473.0" prefWidth="399.0" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.example.g7_projet_2425.controllers.ProjectController">
+<VBox prefHeight="400.0" prefWidth="600.0" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="org.example.g7_projet_2425.controllers.ProjectController">
     <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Gestion des Projets" />
     <TableView fx:id="projectTable">
         <columns>
@@ -23,6 +23,7 @@
         <Button onAction="#viewTeam" text="Afficher l'équipe" />
         <Button onAction="#addTask" text="Ajouter une tâche" />
         <Button onAction="#viewTasks" text="Voir les tâches" />
+        <Button onAction="#viewMain" text="retour a l'accueil" />
     </HBox>
     <TableView fx:id="taskTable" visible="false">
         <columns>

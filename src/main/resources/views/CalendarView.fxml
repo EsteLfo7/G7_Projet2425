@@ -1,4 +1,4 @@
-<!-- calendar_view.fxml -->
+<?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
@@ -6,19 +6,38 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextArea?>
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController">
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.g7_projet_2425.controllers.TaskController" prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #EBDEF0; -fx-padding: 20px;">
+
+    <!-- Titre de la Vue -->
     <top>
-        <Label text="Vue Calendrier" style="-fx-font-size: 18; -fx-padding: 10; -fx-alignment: center;" />
+        <Label text="Vue Calendrier"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #AF74C5; -fx-padding: 10px; -fx-alignment: center;" />
     </top>
+
+    <!-- Contenu du Calendrier -->
     <center>
-        <VBox spacing="10" style="-fx-padding: 10;">
-            <DatePicker fx:id="calendarPicker" />
-            <TextArea fx:id="calendarTasks" editable="false" style="-fx-font-family: monospace;" />
+        <VBox spacing="15" style="-fx-padding: 20px; -fx-alignment: center;">
+            <!-- Sélecteur de Date -->
+            <DatePicker fx:id="calendarPicker"
+                        style="-fx-background-color: white; -fx-border-radius: 10; -fx-border-color: #AF74C5; -fx-padding: 5px;
+                               -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5); -fx-font-size: 14px;" />
+
+            <!-- Zone de texte pour les tâches -->
+            <TextArea fx:id="calendarTasks" editable="false"
+                      style="-fx-background-color: white; -fx-border-radius: 10; -fx-border-color: #AF74C5; -fx-padding: 10px;
+                             -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5); -fx-font-family: monospace;
+                             -fx-font-size: 14px; -fx-text-fill: #333;" />
         </VBox>
     </center>
+
+    <!-- Boutons en bas -->
     <bottom>
-        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
-            <Button text="Retour à la liste des Tâches" onAction="#backToTaskView" />
+        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 20px;">
+            <Button text="Retour à la liste des Tâches" onAction="#backToTaskView"
+                    style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8;
+                           -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
         </HBox>
     </bottom>
 </BorderPane>

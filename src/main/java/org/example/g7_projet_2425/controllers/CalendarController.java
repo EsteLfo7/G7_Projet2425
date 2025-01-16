@@ -31,8 +31,8 @@ public class CalendarController {
     public void setTaskList(ObservableList<Task> tasks) {
         this.taskList = tasks;
     }
-
-    private void displayTasksForSelectedDate() {
+@FXML
+    public void displayTasksForSelectedDate() {
         LocalDate selectedDate = calendarPicker.getValue();
         if (selectedDate != null && taskList != null) {
             StringBuilder tasksForDate = new StringBuilder();

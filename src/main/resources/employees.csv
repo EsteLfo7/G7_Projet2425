@@ -1,6 +1,6 @@
-ID,Name,Role
-1,Jean Bonheur,Manager
-2,Justine Dupieux,Comptable
-3,Rémy Laffitte,Programmeur
-4,Clarence Ducompte,Assistante-Manager
-5,Julie Romero,Dirigeante Marketing
+ID,Name,Role,password
+1,Jean Bonheur,Manager,test
+2,Justine Dupieux,Comptable,test
+3,Rémy Laffitte,Programmeur,test
+4,Clarence Ducompte,Assistante-Manager,test
+5,Julie Romero,Dirigeante Marketing,test

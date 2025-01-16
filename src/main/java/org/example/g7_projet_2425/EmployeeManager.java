@@ -42,15 +42,16 @@ public class EmployeeManager {
         return instance;
     }
 
-    public void createEmployee(int id, String name, String role) {
+    public void createEmployee(int id, String name, String role, String password) {
         if (!employees.containsKey(id)) {
-            employees.put(id, new Employee(id, name, role));
+            employees.put(id, new Employee(id, name, role, password));
             saveEmployeesToCSV();
             notifyEmployeeChange();
         } else {
             System.out.println("Un employé avec cet ID existe déjà !");
         }
     }
+
 
     public void deleteEmployee(int id) {
         if (employees.remove(id) != null) {
@@ -106,16 +107,30 @@ public class EmployeeManager {
                     continue;
                 }
                 String[] fields = line.split(",");
-                int id = Integer.parseInt(fields[0].trim());
-                String name = fields[1].trim();
-                String role = fields[2].trim();
-                employees.put(id, new Employee(id, name, role));
+
+                // Validation du format CSV
+                if (fields.length < 4) {
+                    System.err.println("Ligne ignorée : format incorrect -> " + line);
+                    continue;
+                }
+
+                try {
+                    int id = Integer.parseInt(fields[0].trim());
+                    String name = fields[1].trim();
+                    String role = fields[2].trim();
+                    String password = fields[3].trim();
+
+                    employees.put(id, new Employee(id, name, role, password));
+                } catch (NumberFormatException e) {
+                    System.err.println("Ligne ignorée : ID invalide -> " + line);
+                }
             }
             System.out.println("Les employés ont été chargés depuis le fichier employees.csv");
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement des employés : " + e.getMessage());
         }
     }
+
 
     // Method to register a listener
     public void addEmployeeChangeListener(Consumer<List<Employee>> listener) {
