@@ -1,4 +1,4 @@
-ProjectID,TaskID,Title,Description,Priority,Deadline,Category
+ProjectID,TaskID,Title,Description,Priority,endDate,Category
 1879,1702,dsdv$,sdsd,Moyenne,2024-01-01,Générale
 1879,1702,dsdv$,sdsd,Moyenne,2024-01-01,Générale
 1879,930,yy,hvhy,Moyenne,2024-01-01,Générale

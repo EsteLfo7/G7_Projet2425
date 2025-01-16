@@ -9,19 +9,19 @@ public class Task {
     private String title;
     private String description;
     private String priority;
-    private LocalDate deadline;
+    private LocalDate endDate;
     private String category;
     private List<String> comments;
     private String status;
     private Project project; // Association avec un projet
 
     // Constructeur existant
-    public Task(int id, String title, String description, String priority,LocalDate deadline, String category) {
+    public Task(int id, String title, String description, String priority,LocalDate endDate, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.deadline = deadline;
+        this.endDate = endDate;
         this.category = category;
         this.status = "To Do";
         this.comments = new ArrayList<>();
@@ -39,11 +39,11 @@ public class Task {
     }
 
     // Méthodes
-    public void updateTask(String title, String description, String priority, LocalDate deadline, String category, List<String> comments) {
+    public void updateTask(String title, String description, String priority, LocalDate endDate, String category, List<String> comments) {
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.deadline = deadline;
+        this.endDate = endDate;
         this.category = category;
         this.comments = comments;
     }
@@ -57,7 +57,7 @@ public class Task {
     }
 
     public String displayDetails() {
-        return "Id: " + id + ", Title: " + title + ", Description: " + description + ", Priority: " + priority + ", Deadline: " + deadline + ", Category: " + category;
+        return "Id: " + id + ", Title: " + title + ", Description: " + description + ", Priority: " + priority + ", Deadline: " + endDate + ", Category: " + category;
     }
 
     public void addComment(String comment) {
@@ -94,7 +94,7 @@ public class Task {
     }
 
     public LocalDate getDeadline() {
-        return deadline;
+        return endDate;
     }
 
     public String getStatus() {

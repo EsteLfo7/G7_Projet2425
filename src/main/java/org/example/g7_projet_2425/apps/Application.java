@@ -77,9 +77,6 @@ public class Application {
 
     // Méthode pour initialiser des données par défaut (si nécessaire)
     private void initializeDefaultData() {
-        // Ajouter quelques employés par défaut
-        employees.add(new Employee(1, "Alice Smith", "Project Manager"));
-        employees.add(new Employee(2, "Bob Johnson", "Developer"));
 
         // Ajouter un projet par défaut
         Project defaultProject = new Project(1, "Migration système", null, null);

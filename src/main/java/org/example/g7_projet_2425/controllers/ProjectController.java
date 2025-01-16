@@ -2,12 +2,18 @@ package org.example.g7_projet_2425.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.example.g7_projet_2425.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -356,4 +362,18 @@ public class ProjectController {
         private int generateTaskId() {
         return (int) (Math.random() * 10000); // Génération simple d'un ID
     }
+
+    @FXML
+    public void viewMain(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Accueil");
+            stage.show();
+        }
+        catch (IOException e)  {e.printStackTrace();}
+    }
+
 }

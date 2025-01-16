@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.g7_projet_2425.controllers.LoginController"
+            prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: #EBDEF0;">
+    <children>
+        <VBox alignment="CENTER" spacing="20.0"
+              style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 15; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);"
+              AnchorPane.topAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+            <children>
+                <Label text="Connexion"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #AF74C5;" />
+                <TextField fx:id="usernameField" promptText="Nom d'utilisateur"
+                           style="-fx-font-size: 14px; -fx-border-color: #AF74C5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;" />
+                <PasswordField fx:id="passwordField" promptText="Mot de passe"
+                               style="-fx-font-size: 14px; -fx-border-color: #AF74C5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10;" />
+                <Button text="Connexion" onAction="#handleLogin"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+                <Label fx:id="errorMessage"
+                       style="-fx-text-fill: red; -fx-font-size: 12px;" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
