@@ -253,11 +253,12 @@ public class ProjectManager {
 
 
     private void loadTeamMembersFromCSV() {
-        teamMembersCsvFilePath="team_members.csv";
-        System.out.println("aze"+teamMembersCsvFilePath);
+        teamMembersCsvFilePath = "team_members.csv";
+        System.out.println("Chemin du fichier CSV : " + teamMembersCsvFilePath);
         File file = new File(teamMembersCsvFilePath);
+
         if (!file.exists()) {
-            System.out.println("Fichier team_members.csv non trouvé. Création d'une base vide."+file);
+            System.out.println("Fichier team_members.csv non trouvé. Création d'une base vide : " + file);
             return;
         }
 
@@ -270,31 +271,40 @@ public class ProjectManager {
                     isHeader = false; // Ignore the header line
                     continue;
                 }
+
                 String[] fields = line.split(",");
-                if (fields.length < 4) {
-                    System.err.println("Ligne invalide dans le fichier CSV : " + line);
+
+                // Vérifiez si le nombre de colonnes est suffisant
+                if (fields.length < 5) {
+                    System.err.println("Ligne invalide dans le fichier CSV (colonnes insuffisantes) : " + line);
                     continue;
                 }
 
-                int projectId = Integer.parseInt(fields[0].trim());
-                int employeeId = Integer.parseInt(fields[1].trim());
-                String name = fields[2].trim();
-                String role = fields[3].trim();
-                String password = fields[4].trim();
+                try {
+                    int projectId = Integer.parseInt(fields[0].trim());
+                    int employeeId = Integer.parseInt(fields[1].trim());
+                    String name = fields[2].trim();
+                    String role = fields[3].trim();
+                    String password = fields[4].trim();
 
-                Project project = projects.get(projectId);
-                if (project != null) {
-                    Employee employee = new Employee(employeeId, name, role,password);
-                    project.addTeamMember(employee);
-                } else {
-                    System.err.println("Projet ID non trouvé pour l'employé : " + name);
+                    Project project = projects.get(projectId);
+                    if (project != null) {
+                        Employee employee = new Employee(employeeId, name, role, password);
+                        project.addTeamMember(employee);
+                    } else {
+                        System.err.println("Projet ID non trouvé pour l'employé : " + name);
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Erreur de format dans la ligne : " + line + " (" + e.getMessage() + ")");
                 }
             }
+
             System.out.println("Les membres d'équipe ont été chargés depuis le fichier team_members.csv");
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Erreur lors du chargement des membres d'équipe : " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier team_members.csv : " + e.getMessage());
         }
     }
+
 
 
 
