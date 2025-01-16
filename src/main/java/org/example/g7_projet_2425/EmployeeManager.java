@@ -1,41 +1,38 @@
 package org.example.g7_projet_2425;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.*;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class EmployeeManager {
-    private static EmployeeManager instance; // Instance unique
+    private static EmployeeManager instance; // Singleton instance
 
-    private String csvFilePath; // Chemin relatif vers le fichier CSV
+    private String csvFilePath;
     public Map<Integer, Employee> employees;
     private final List<Consumer<List<Employee>>> employeeChangeListeners = new ArrayList<>();
 
     protected EmployeeManager() {
         employees = new HashMap<>();
 
-        // Utiliser un chemin absolu pour le fichier CSV
-        csvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/employees.csv"; // Remplacez par votre chemin exact
-
-        Path absolutePath = Paths.get(csvFilePath);
-
-        if (Files.exists(absolutePath)) {
-            System.out.println("Fichier trouvé : " + absolutePath);
-        } else {
-            System.err.println("Erreur : le fichier employees.csv est introuvable au chemin absolu : " + absolutePath);
-            // Optionnel : Par défaut, utiliser un fichier dans le répertoire courant
-            csvFilePath = "employees.csv";
+        // Resolve the path to the resources folder
+        try {
+            URL resourceUrl = getClass().getClassLoader().getResource("employees.csv");
+            if (resourceUrl != null) {
+                Path resourcePath = Paths.get(resourceUrl.toURI());
+                csvFilePath = resourcePath.toString();
+                System.out.println("Fichier trouvé : " + csvFilePath);
+            } else {
+                throw new FileNotFoundException("Le fichier employees.csv est introuvable dans le dossier resources.");
+            }
+        } catch (URISyntaxException | IOException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            csvFilePath = "resources/data/employees.csv"; // Fallback to a default path
         }
 
-        loadEmployeesFromCSV(); // Charger les employés depuis le fichier CSV au démarrage
-
+        loadEmployeesFromCSV(); // Load employees from the CSV file at startup
     }
 
     public static EmployeeManager getInstance() {
@@ -72,7 +69,6 @@ public class EmployeeManager {
             System.out.println("Employé non trouvé !");
         }
     }
-
 
     public Map<Integer, Employee> getEmployees() {
         return employees;
@@ -121,23 +117,16 @@ public class EmployeeManager {
         }
     }
 
-    // Méthode pour enregistrer un écouteur
+    // Method to register a listener
     public void addEmployeeChangeListener(Consumer<List<Employee>> listener) {
         employeeChangeListeners.add(listener);
-
     }
-    // Méthode pour notifier les changements
+
+    // Method to notify listeners of changes
     private void notifyEmployeeChange() {
         List<Employee> employeeList = new ArrayList<>(employees.values());
         for (Consumer<List<Employee>> listener : employeeChangeListeners) {
             listener.accept(employeeList);
         }
     }
-
-
-
-
-
-
-
 }

@@ -1,7 +1,6 @@
 package org.example.g7_projet_2425;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,8 +13,8 @@ public class ProjectManager {
 
     private String csvFilePath; // Chemin relatif vers le fichier CSV
     private Map<Integer, Project> projects;
-    private String tasksCsvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/tasks.csv";
-    private String teamMembersCsvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/team_members.csv";
+    private String tasksCsvFilePath = "../../resources/tasks.csv";
+    private String teamMembersCsvFilePath = "../../resources/team_members.csv";
 
 
     // Constructeur
@@ -23,7 +22,7 @@ public class ProjectManager {
         projects = new HashMap<>();
 
         // Définir le chemin relatif vers le fichier dans le dossier resources
-        csvFilePath = "C:/Users/Esteban/OneDrive - ISEP/Documents/COURS/PROG/FICHIERS/IntelliJ/G7_Projet_2425/src/main/resources/data/projects.csv"; // Remplacez par votre chemin exact
+        csvFilePath = "../../resources/project.csv"; // Remplacez par votre chemin exact
 
         Path absolutePath = Paths.get(csvFilePath);
 
@@ -183,7 +182,9 @@ public class ProjectManager {
 
     // Charger les projets depuis un fichier CSV
     private void loadProjectsFromCSV() {
+        csvFilePath="projects.csv";
         File file = new File(csvFilePath);
+        System.out.println(csvFilePath);
         if (!file.exists()) {
             System.out.println("Fichier CSV non trouvé. Création d'une base vide.");
             return;
