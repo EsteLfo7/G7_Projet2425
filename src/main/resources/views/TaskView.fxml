@@ -28,16 +28,27 @@
 
     <!-- Boutons pour les actions -->
     <bottom>
-        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10px; -fx-alignment: center;">
-            <Button onAction="#openCalendarView" text="Voir le Calendrier"
-                    style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8;
-                           -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
-            <Button onAction="#openKanbanView" text="Voir le Kanban"
-                    style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8;
-                           -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
-            <Button onAction="#viewMain" text="Retour à l'accueil"
-                    style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8;
-                           -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
-        </HBox>
+        <VBox alignment="CENTER" spacing="1.0">
+            <HBox spacing="20" style="-fx-alignment: center; -fx-padding: 10px;">
+                <Button text="Ajouter" onAction="#addTask"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+                <Button text="Modifier" onAction="#editTask"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+                <Button text="Supprimer" onAction="#deleteTask"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8; -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10;" />
+            </HBox>
+            <HBox alignment="CENTER" spacing="10" style="-fx-padding: 10px; -fx-alignment: center;">
+                <Button onAction="#openCalendarView" text="Voir le Calendrier"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8;
+                               -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
+                <Button onAction="#openKanbanView" text="Voir le Kanban"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8;
+                               -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
+                <Button onAction="#viewMain" text="Retour à l'accueil"
+                        style="-fx-background-color: transparent; -fx-border-color: #AF74C5; -fx-border-width: 2; -fx-border-radius: 8; -fx-background-radius: 8;
+                               -fx-text-fill: #AF74C5; -fx-font-weight: bold; -fx-padding: 10px;" />
+            </HBox>
+        </VBox>
+
     </bottom>
 </BorderPane>

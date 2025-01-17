@@ -111,8 +111,9 @@ public class ProjectController {
         });
 
         // Charger les employés au démarrage
-        availableEmployees.setAll(EmployeeManager.getInstance().getEmployees().values());
 
+        availableEmployees.setAll(EmployeeManager.getInstance().getEmployees().values());
+        projectList.setAll(ProjectManager.getInstance().getProjects().values());
     }
 
 
@@ -295,7 +296,7 @@ public class ProjectController {
         LocalDate endDate = showDateDialog("Entrez la date de fin de la tâche (AAAA-MM-JJ)");
         if (endDate == null) return;
 
-        Task newTask = new Task(taskId, title, description, "Moyenne", endDate, "Générale");
+        Task newTask = new Task(taskId, title, description, 0, endDate, "Générale");
  //       selectedProject.addTask(newTask);
 
         ProjectManager.getInstance().addTaskToProject(selectedProject.getId(), newTask);

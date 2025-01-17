@@ -1,6 +1,11 @@
 package org.example.g7_projet_2425;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,25 +19,27 @@ public class ProjectManager {
 
     private String csvFilePath; // Chemin relatif vers le fichier CSV
     private Map<Integer, Project> projects;
-    private String tasksCsvFilePath = "../../resources/tasks.csv";
-    private String teamMembersCsvFilePath = "../../resources/team_members.csv";
-
+    private String tasksCsvFilePath;
+    private String teamMembersCsvFilePath = "resources/team_members.csv";
+    private ObservableList<Project> projectsList = FXCollections.observableArrayList();
 
     // Constructeur
     private ProjectManager() {
         projects = new HashMap<>();
 
         // Définir le chemin relatif vers le fichier dans le dossier resources
-        csvFilePath = "../../resources/project.csv"; // Remplacez par votre chemin exact
-
-        Path absolutePath = Paths.get(csvFilePath);
-
-        if (Files.exists(absolutePath)) {
-            System.out.println("Fichier trouvé : " + absolutePath);
-        } else {
-            System.err.println("Erreur : le fichier projects.csv est introuvable au chemin absolu : " + absolutePath);
-            // Optionnel : Par défaut, utiliser un fichier dans le répertoire courant
-            csvFilePath = "employees.csv";
+        try {
+            URL resourceUrl = getClass().getClassLoader().getResource("projects.csv");
+            if (resourceUrl != null) {
+                Path resourcePath = Paths.get(resourceUrl.toURI());
+                csvFilePath = resourcePath.toString();
+                System.out.println("Fichier trouvé : " + csvFilePath);
+            } else {
+                throw new FileNotFoundException("Le fichier projects.csv est introuvable dans le dossier resources.");
+            }
+        } catch (URISyntaxException | IOException e) {
+            System.err.println("Erreur : " + e.getMessage());
+            csvFilePath = "resources/data/projects.csv"; // Fallback to a default path
         }
         // Charger les données depuis les fichiers CSV au démarrage
         loadProjectsFromCSV();
@@ -130,7 +137,7 @@ public class ProjectManager {
 
     // Sauvegarder les projes dans un fichier CSV
     private void saveProjectsToCSV() {
-        csvFilePath="projet.csv";
+        csvFilePath="projects.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
             writer.write("ID,Title,StartDate,EndDate");
             writer.newLine();
@@ -169,11 +176,11 @@ public class ProjectManager {
     private void saveTeamMembersToCSV(String role) {
         teamMembersCsvFilePath="team_members.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(teamMembersCsvFilePath))) {
-            writer.write("ProjectID,employeeId, name, role");
+            writer.write("ProjectID,employeeId, name, role,password");
             writer.newLine();
             for (Project project : projects.values()) {
                 for (Employee member : project.getTeamMembers()) {
-                    String line = project.getId() + "," + member.getId() + "," + member.getName() + "," + role;
+                    String line = project.getId() + "," + member.getId() + "," + member.getName() + "," + role + "," + member.getPassword() ;
                     writer.write(line);
                     writer.newLine();
                 }
@@ -186,7 +193,6 @@ public class ProjectManager {
 
     // Charger les projets depuis un fichier CSV
     private void loadProjectsFromCSV() {
-        csvFilePath="projects.csv";
         File file = new File(csvFilePath);
         System.out.println(csvFilePath);
         if (!file.exists()) {
@@ -229,7 +235,7 @@ public class ProjectManager {
                         int taskId = Integer.parseInt(parts[1]); // ID de la tâche
                         String title = parts[2]; // Titre de la tâche
                         String description = parts[3]; // Description
-                        String priority = parts[4]; // Priorité
+                        int priority = Integer.parseInt(parts[4]); // Priorité
                         LocalDate deadline = LocalDate.parse(parts[5]); // Deadline
                         String category = parts[6]; // Catégorie
 

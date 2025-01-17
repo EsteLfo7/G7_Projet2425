@@ -8,7 +8,7 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    private String priority;
+    private int priority;
     private LocalDate endDate;
     private String category;
     private List<String> comments;
@@ -16,7 +16,7 @@ public class Task {
     private Project project; // Association avec un projet
 
     // Constructeur existant
-    public Task(int id, String title, String description, String priority,LocalDate endDate, String category) {
+    public Task(int id, String title, String description, int priority,LocalDate endDate, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -28,7 +28,7 @@ public class Task {
     }
 
     // Nouveau constructeur surchargé pour inclure un projet
-    public Task(int id, String title, String description, String priority, Project project) {
+    public Task(int id, String title, String description, int priority, Project project) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -39,16 +39,15 @@ public class Task {
     }
 
     // Méthodes
-    public void updateTask(String title, String description, String priority, LocalDate endDate, String category, List<String> comments) {
+    public void updateTask(String title, String description, int priority, LocalDate endDate, String category) {
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.endDate = endDate;
         this.category = category;
-        this.comments = comments;
     }
 
-    public static Task createTask(int id, String title, String description, String priority, LocalDate deadline, String category, List<String> comments) {
+    public static Task createTask(int id, String title, String description, int priority, LocalDate deadline, String category, List<String> comments) {
         return new Task(id, title, description, priority, deadline, category);
     }
 
@@ -85,11 +84,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 

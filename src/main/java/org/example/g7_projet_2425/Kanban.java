@@ -15,6 +15,13 @@ public class Kanban {
         this.done = new ArrayList<>();
     }
 
+    public void addTask(Task task) {
+        // Ajout de la tâche à la liste To Do
+        if (!toDo.contains(task)) {
+            toDo.add(task);
+        }
+    }
+
     public void moveTaskToDo(Task task) {
         inProgress.remove(task);
         done.remove(task);

@@ -47,24 +47,15 @@ public class EmployeeController {
         employeeTable.setItems(employeeList);
     }
 
+    private int generateEmployeeId() {
+        return (int) (Math.random() * 10000); // Génération simple d'un ID
+    }
+
     @FXML
     public void addEmployee() {
         // Boîte de dialogue pour saisir l'ID
-        TextInputDialog idDialog = new TextInputDialog();
-        idDialog.setTitle("Ajouter un employé");
-        idDialog.setHeaderText("Ajouter un nouvel employé");
-        idDialog.setContentText("Entrez l'ID de l'employé :");
-        Optional<String> idResult = idDialog.showAndWait();
+        int id = generateEmployeeId();
 
-        if (!idResult.isPresent()) return;
-
-        int id;
-        try {
-            id = Integer.parseInt(idResult.get().trim());
-        } catch (NumberFormatException e) {
-            showError("Erreur", "L'ID doit être un entier.");
-            return;
-        }
 
         // Boîte de dialogue pour saisir le nom
         TextInputDialog nameDialog = new TextInputDialog();

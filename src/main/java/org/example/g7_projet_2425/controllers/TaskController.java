@@ -11,12 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.example.g7_projet_2425.Kanban;
-import org.example.g7_projet_2425.Task;
+import org.example.g7_projet_2425.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 public class TaskController {
 
@@ -30,7 +31,7 @@ public class TaskController {
     private TableColumn<Task, String> titleColumn;
 
     @FXML
-    private TableColumn<Task, String> priorityColumn;
+    private TableColumn<Task, Integer> priorityColumn;
 
     @FXML
     private TableColumn<Task, LocalDate> endDateColumn;
@@ -43,35 +44,41 @@ public class TaskController {
 
     @FXML
     public void initialize() {
-            if (idColumn == null) {
-                idColumn = new TableColumn<>("ID");
-            }
+        // Vérification et configuration des colonnes
+        if (idColumn == null) {
+            idColumn = new TableColumn<>("ID");
+        }
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         if (titleColumn == null) {
             titleColumn = new TableColumn<>("Title");
         }
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
         if (priorityColumn == null) {
             priorityColumn = new TableColumn<>("Priority");
         }
         priorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
+
         if (endDateColumn == null) {
             endDateColumn = new TableColumn<>("End Date");
         }
         endDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+
         if (statusColumn == null) {
             statusColumn = new TableColumn<>("Status");
         }
-       statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-if (titleColumn == null) {
-    titleColumn = new TableColumn<>("Title");
-}
-        System.out.println(taskTable);
-    taskTable = new TableView<Task>();
-    taskTable.setItems(taskList);
-        System.out.println(taskTable);
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
+        // Configuration de la TableView
+        if (taskTable == null) {
+            taskTable = new TableView<>();
+        }
+        taskTable.setItems(taskList);
+
+        // Initialisation de Kanban
         kanban = new Kanban();
+        taskList.setAll(TaskManager.getInstance().getTasks().values());
     }
 
     @FXML
@@ -89,10 +96,24 @@ if (titleColumn == null) {
         switchScene("TaskView.fxml", "Liste des Tâches");
     }
 
+
+    @FXML
+    public void viewMain(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Accueil");
+            stage.show();
+        }
+        catch (IOException e)  {e.printStackTrace();}
+    }
+
     private void switchScene(String fxmlFile, String title) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + fxmlFile));
         Parent root = loader.load();
-        Stage stage=new Stage();
+        Stage stage = new Stage();
         stage.setTitle(title);
         stage.setScene(new Scene(root));
         stage.show();
@@ -102,7 +123,7 @@ if (titleColumn == null) {
     public void viewAllTasks() {
         List<Task> allTasks = kanban.getAllTasks();
 
-        // Fenêtre dédiée
+        // Création d'une nouvelle fenêtre
         Stage taskWindow = new Stage();
         VBox taskLayout = new VBox(10);
         taskLayout.setStyle("-fx-padding: 10;");
@@ -118,102 +139,129 @@ if (titleColumn == null) {
         taskWindow.show();
     }
 
+    private int generateTaskId() {
+        return (int) (Math.random() * 10000); // Génération d'un ID aléatoire
+    }
+
     @FXML
     public void addTask() {
-        Task newTask = new Task(
-                taskList.size() + 1,
-                "Nouvelle Tâche",
-                "Description par défaut",
-                "Moyenne",
-                LocalDate.now().plusDays(7),
-                "To Do"
-        );
-        kanban.moveTaskToDo(newTask);
-        taskList.add(newTask);
+        try {
+            int id = generateTaskId();
+
+            // Saisie des informations
+            String title = promptForInput("Ajouter une tâche", "Entrez le titre de la tâche :", "Le titre ne peut pas être vide.");
+            if (title == null) return;
+
+            String description = promptForInput("Ajouter une tâche", "Entrez la description de la tâche :", "La description ne peut pas être vide.");
+            if (description == null) return;
+
+            String priorityInput = promptForInput("Ajouter une tâche", "Entrez la priorité (1-5) :", "La priorité est obligatoire.");
+            if (priorityInput == null) return;
+
+            int priority;
+            try {
+                priority = Integer.parseInt(priorityInput.trim());
+            } catch (NumberFormatException e) {
+                showError("Erreur", "La priorité doit être un nombre.");
+                return;
+            }
+
+            String deadlineInput = promptForInput("Ajouter une tâche", "Entrez la date limite (YYYY-MM-DD) :", "La date limite est obligatoire.");
+            if (deadlineInput == null) return;
+
+            LocalDate deadline;
+            try {
+                deadline = LocalDate.parse(deadlineInput.trim());
+            } catch (DateTimeParseException e) {
+                showError("Erreur", "Format de date invalide. Utilisez YYYY-MM-DD.");
+                return;
+            }
+
+            String category = promptForInput("Ajouter une tâche", "Entrez la catégorie :", "La catégorie est obligatoire.");
+            if (category == null) return;
+
+            TaskManager.getInstance().createTask(id, title, description, priority, deadline, category);
+            taskList.setAll(TaskManager.getInstance().getTasks().values());
+            Task task = new Task(id, title, description, priority, deadline, category);
+            kanban.addTask(task);
+        } catch (Exception e) {
+            showError("Erreur", "Échec de l'ajout de la tâche.");
+        }
+
     }
-
-
-    private Task findTaskById(int id) {
-        return taskList.stream().filter(task -> task.getId() == id).findFirst().orElse(null);
-    }
-
-
-
-
 
     @FXML
     public void editTask() {
         Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
-        if (selectedTask != null) {
-            TextInputDialog dialog = new TextInputDialog(selectedTask.getTitle());
-            dialog.setTitle("Modifier Tâche");
-            dialog.setHeaderText("Modifier le titre de la tâche");
-            dialog.setContentText("Titre :");
+        if (selectedTask == null) {
+            showError("Erreur", "Veuillez sélectionner une tâche pour la modifier.");
+            return;
+        }
 
-            dialog.showAndWait().ifPresent(newTitle -> {
-                selectedTask.setTitle(newTitle);
-                kanban.moveTaskDone(selectedTask);
-                taskList.remove(selectedTask);
-                taskTable.refresh();
-            });
-        } else {
-            showAlert("Erreur", "La tâche sélectionnée est invalide.");
+        try {
+            String input = promptForInput("Modifier une tâche", "Entrez title,description,priority,deadline,category :", "Les informations sont obligatoires.");
+            if (input == null) return;
+
+            String[] data = input.split(",");
+            String title = data[0].trim();
+            String description = data[1].trim();
+            int priority = Integer.parseInt(data[2].trim());
+            LocalDate deadline = LocalDate.parse(data[3].trim());
+            String category = data[4].trim();
+
+            TaskManager.getInstance().updateTask(selectedTask.getId(), title, description, priority, deadline, category);
+            taskList.setAll(TaskManager.getInstance().getTasks().values());
+        } catch (Exception e) {
+            showError("Erreur", "Échec de la modification de la tâche.");
         }
     }
-
 
     @FXML
     public void deleteTask() {
         Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
-        if (selectedTask != null) {
-            taskList.remove(selectedTask);
-            kanban.getToDo().remove(selectedTask);
-            kanban.getInProgress().remove(selectedTask);
-            kanban.getDone().remove(selectedTask);
-
-        } else {
-            showAlert("Erreur", "Veuillez sélectionner une tâche à supprimer.");
+        if (selectedTask == null) {
+            showError("Erreur", "Veuillez sélectionner une tâche à supprimer.");
+            return;
         }
-    }
 
+        TaskManager.getInstance().deleteTask(selectedTask.getId());
+        taskList.setAll(TaskManager.getInstance().getTasks().values());
+    }
 
     @FXML
     public void assignTask() {
         Task selectedTask = taskTable.getSelectionModel().getSelectedItem();
         if (selectedTask != null) {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Assigner Tâche");
-            dialog.setHeaderText("Assigner une tâche");
-            dialog.setContentText("Nom de l'utilisateur :");
+            String assignee = promptForInput("Assigner une tâche", "Nom de l'utilisateur :", "Le nom de l'utilisateur est obligatoire.");
+            if (assignee == null) return;
 
-            dialog.showAndWait().ifPresent(assignee -> {
-                selectedTask.setStatus(assignee);
-                taskTable.refresh();
-            });
+            selectedTask.setStatus(assignee);
+            taskTable.refresh();
         } else {
-            showAlert("Erreur", "Veuillez sélectionner une tâche à assigner.");
+            showError("Erreur", "Veuillez sélectionner une tâche à assigner.");
         }
     }
 
+    private String promptForInput(String title, String content, String errorMessage) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(null);
+        dialog.setContentText(content);
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent() && !result.get().trim().isEmpty()) {
+            return result.get().trim();
+        } else {
+            showError("Erreur", errorMessage);
+            return null;
+        }
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
-    @FXML
-    public void viewMain(ActionEvent event){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Accueil");
-            stage.show();
-        }
-        catch (IOException e)  {e.printStackTrace();}
-    }
-
-
 }

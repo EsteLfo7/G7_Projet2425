@@ -83,8 +83,8 @@ public class Application {
         projects.add(defaultProject);
 
         // Ajouter quelques tâches par défaut
-        tasks.add(new Task(1, "Configurer serveur", null, null, defaultProject));
-        tasks.add(new Task(2, "Développer module client", null, null, defaultProject));
+        tasks.add(new Task(1, "Configurer serveur", null, 0, defaultProject));
+        tasks.add(new Task(2, "Développer module client", null, 0, defaultProject));
     }
 
     // Méthode pour afficher un résumé de l'état actuel de l'application
